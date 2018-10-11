@@ -50,8 +50,8 @@ void Trace()
 bool IdleNotification()
 {
 #if NODE_VERSION_AT_LEAST(0, 12, 0)
-  static const int idle_time_in_ms = 5;
-  return isolate->IdleNotification(idle_time_in_ms);
+  static const int idle_time_in_s = 0.005;
+  return isolate->IdleNotificationDeadline(idle_time_in_s);
 #else
   return v8::V8::IdleNotification();
 #endif
