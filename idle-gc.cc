@@ -15,6 +15,7 @@
  */
 
 #include "compat.h"
+#include "compat-inl.h"
 
 #include "node.h"
 #include "uv.h"
