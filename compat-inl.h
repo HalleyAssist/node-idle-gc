@@ -292,23 +292,10 @@ ReturnType ReturnableHandleScope::Return(v8::Local<v8::Value> value) {
 
 void CpuProfiler::StartCpuProfiling(v8::Isolate* isolate,
                                     v8::Local<v8::String> title) {
-  const bool record_samples = true;
-  if (title.IsEmpty()) title = v8::String::Empty(isolate);
-#if !NODE_VERSION_AT_LEAST(3, 0, 0)
-  return isolate->GetCpuProfiler()->StartCpuProfiling(title, record_samples);
-#else
-  return isolate->GetCpuProfiler()->StartProfiling(title, record_samples);
-#endif
 }
 
 const v8::CpuProfile* CpuProfiler::StopCpuProfiling(
     v8::Isolate* isolate, v8::Local<v8::String> title) {
-  if (title.IsEmpty()) title = v8::String::Empty(isolate);
-#if !NODE_VERSION_AT_LEAST(3, 0, 0)
-  return isolate->GetCpuProfiler()->StopCpuProfiling(title);
-#else
-  return isolate->GetCpuProfiler()->StopProfiling(title);
-#endif
 }
 
 void Isolate::GetHeapStatistics(v8::Isolate* isolate,
