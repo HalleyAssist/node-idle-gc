@@ -122,9 +122,9 @@ void Init(v8::Local<v8::Object> obj)
   uv_unref(reinterpret_cast<uv_handle_t*>(&check_handle));
   uv_unref(reinterpret_cast<uv_handle_t*>(&prepare_handle));
 
-  obj->Set(v8::String::NewFromUtf8(isolate, "stop"),
+  obj->Set(context, v8::String::NewFromUtf8(isolate, "stop"),
            C::FunctionTemplate::New(isolate, Stop)->GetFunction(context));
-  obj->Set(v8::String::NewFromUtf8(isolate, "start"),
+  obj->Set(context, v8::String::NewFromUtf8(isolate, "start"),
            C::FunctionTemplate::New(isolate, Start)->GetFunction(context));
 
 #if NODE_VERSION_AT_LEAST(1, 0, 0)
