@@ -110,6 +110,7 @@ C::ReturnType Start(const C::ArgumentType& args)
 void Init(v8::Local<v8::Object> obj)
 {
   isolate = v8::Isolate::GetCurrent();
+  v8::Local<v8::Context> context = isolate->GetCurrentContext();
 
   uv_timer_init(uv_default_loop(), &timer_handle);
   uv_check_init(uv_default_loop(), &check_handle);
@@ -119,9 +120,9 @@ void Init(v8::Local<v8::Object> obj)
   uv_unref(reinterpret_cast<uv_handle_t*>(&prepare_handle));
 
   obj->Set(v8::String::NewFromUtf8(isolate, "stop"),
-           C::FunctionTemplate::New(isolate, Stop)->GetFunction());
+           C::FunctionTemplate::New(isolate, Stop)->GetFunction(context));
   obj->Set(v8::String::NewFromUtf8(isolate, "start"),
-           C::FunctionTemplate::New(isolate, Start)->GetFunction());
+           C::FunctionTemplate::New(isolate, Start)->GetFunction(context));
 
 #if NODE_VERSION_AT_LEAST(1, 0, 0)
   // v8::Isolate::IdleNotification() is a no-op without --use_idle_notification.
