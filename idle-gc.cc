@@ -100,7 +100,7 @@ C::ReturnType Start(const C::ArgumentType& args)
   C::ReturnableHandleScope handle_scope(args);
   Stop();
 
-  interval = args[0]->IsNumber() ? args[0]->IntegerValue(context) : 0;
+  interval = args[0]->IsNumber() ? args[0]->IntegerValue(context).FromJust() : 0;
   if (interval <= 0) interval = 5000;  // Default to 5 seconds.
 
   state = RUN;
@@ -114,6 +114,8 @@ void Init(v8::Local<v8::Object> obj)
 {
   isolate = v8::Isolate::GetCurrent();
   v8::Local<v8::Context> context = isolate->GetCurrentContext();
+  v8::Local<v8::Value> value1;
+  v8::Local<v8::Value> value2;
 
   uv_timer_init(uv_default_loop(), &timer_handle);
   uv_check_init(uv_default_loop(), &check_handle);
@@ -122,10 +124,10 @@ void Init(v8::Local<v8::Object> obj)
   uv_unref(reinterpret_cast<uv_handle_t*>(&check_handle));
   uv_unref(reinterpret_cast<uv_handle_t*>(&prepare_handle));
 
-  obj->Set(context, v8::String::NewFromUtf8(isolate, "stop"),
-           C::FunctionTemplate::New(isolate, Stop)->GetFunction(context));
-  obj->Set(context, v8::String::NewFromUtf8(isolate, "start"),
-           C::FunctionTemplate::New(isolate, Start)->GetFunction(context));
+  C::FunctionTemplate::New(isolate, Stop)->GetFunction(context).ToLocal(&value1);
+  obj->Set(context, v8::String::NewFromUtf8(isolate, "stop"), value1);
+  C::FunctionTemplate::New(isolate, Start)->GetFunction(context).ToLocal(&value2);
+  obj->Set(context, v8::String::NewFromUtf8(isolate, "start"), value2);
 
 #if NODE_VERSION_AT_LEAST(1, 0, 0)
   // v8::Isolate::IdleNotification() is a no-op without --use_idle_notification.
