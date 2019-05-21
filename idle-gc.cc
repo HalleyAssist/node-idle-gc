@@ -94,10 +94,13 @@ C::ReturnType Stop(const C::ArgumentType& args)
 
 C::ReturnType Start(const C::ArgumentType& args)
 {
+  isolate = v8::Isolate::GetCurrent();
+  v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
   C::ReturnableHandleScope handle_scope(args);
   Stop();
 
-  interval = args[0]->IsNumber() ? args[0]->IntegerValue() : 0;
+  interval = args[0]->IsNumber() ? args[0]->IntegerValue(context) : 0;
   if (interval <= 0) interval = 5000;  // Default to 5 seconds.
 
   state = RUN;
